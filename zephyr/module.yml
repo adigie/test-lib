@@ -1,0 +1,4 @@
+name: test-app
+build:
+  kconfig: Kconfig
+  cmake: .

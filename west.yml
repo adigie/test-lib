@@ -1,0 +1,4 @@
+manifest:
+  remotes:
+    - name: adigie
+      url-base: https://github.com/adigie
