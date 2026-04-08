@@ -37,9 +37,38 @@ jobs:
         timeout-minutes: 1
         run: |
           ./build/zephyr/zephyr.exe -stop_at=0
-      
+
       - name: Install
         shell: bash
         run: |
-          cmake --install test-lib/build/ --component test_lib --prefix .
-          ls -la ./bin
+          cmake --install test-lib/build/ --component test_lib --prefix staging
+          find staging/ -type f
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: test-lib-dist
+          path: |
+            staging/bin
+            staging/include
+
+      - uses: actions/checkout@v4
+        with:
+          repository: adigie/test-bin
+          path: test-bin
+          token: ${{ secrets.TEST_BIN_PR_PAT }}
+
+      - name: Sync vendored lib and headers
+        run: |
+          rsync -a --delete staging/bin/ test-bin/bin/
+          rsync -a --delete staging/include/ test-bin/include/
+
+      - uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.TEST_BIN_PR_PAT }}
+          path: test-bin
+          commit-message: "sync test-lib for PR #${{ github.event.pull_request.number }}"
+          branch: sync/test-lib-pr-${{ github.event.pull_request.number }}
+          delete-branch: true
+          title: Sync test-lib (test-lib PR #${{ github.event.pull_request.number }})
+          body: |
+            Automated sync for [test-lib PR #${{ github.event.pull_request.number }}](https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}) at `${{ github.sha }}`.

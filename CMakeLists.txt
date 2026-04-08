@@ -23,4 +23,10 @@ if(CONFIG_TEST_LIB)
         COMPONENT test_lib
     )
 
+    install(
+        DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        DESTINATION include
+        COMPONENT test_lib
+    )
+
 endif()
