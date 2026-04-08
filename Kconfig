@@ -1,0 +1,2 @@
+config TEST_LIB
+    bool "Test library"
