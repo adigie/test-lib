@@ -37,3 +37,9 @@ jobs:
         timeout-minutes: 1
         run: |
           ./build/zephyr/zephyr.exe -stop_at=0
+      
+      - name: Install
+        shell: bash
+        run: |
+          cmake --install test-lib/build/ --component test_lib --prefix .
+          ls -la ./bin
