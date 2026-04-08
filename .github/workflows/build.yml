@@ -1,0 +1,39 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: test-lib
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Setup Zephyr project
+        uses: zephyrproject-rtos/action-zephyr-setup@v1
+        with:
+          app-path: test-lib
+          toolchains: x86_64-zephyr-elf
+
+      - name: Build
+        working-directory: test-lib
+        shell: bash
+        run: |
+          west build -b native_sim test
+
+      - name: Run
+        working-directory: test-lib
+        shell: bash
+        timeout-minutes: 1
+        run: |
+          ./build/zephyr/zephyr.exe -stop_at=0

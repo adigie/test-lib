@@ -1,0 +1,5 @@
+if(CONFIG_TEST_LIB)
+    zephyr_include_directories(include)
+    zephyr_library_named(test_lib)
+    zephyr_library_sources(src/test_lib.c)
+endif()
