@@ -51,11 +51,20 @@ jobs:
             staging/bin
             staging/include
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: test_env
+    steps:
       - uses: actions/checkout@v4
         with:
           repository: adigie/test-bin
           path: test-bin
           token: ${{ secrets.TEST_BIN_PR_PAT }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: test-lib-dist
 
       - name: Sync vendored lib and headers
         run: |
