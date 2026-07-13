@@ -65,6 +65,8 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: test-lib-dist
+          path: staging
+          run: ls -R staging
 
       - name: Sync vendored lib and headers
         run: |
